@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.9.20)  3 FEB 2017 07:29
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9.6210 64-bit) (preloaded format=pdflatex 2017.1.22)  10 FEB 2017 08:24
 entering extended mode
-**Outline.tex
+**./Outline.tex
 (Outline.tex
-LaTeX2e <2014/05/01>
-Babel <3.9l> and hyphenation patterns for 68 languages loaded.
+LaTeX2e <2016/03/31> patch level 3
+Babel <3.9r> and hyphenation patterns for 75 language(s) loaded.
 ("C:\Program Files\MiKTeX 2.9\tex\latex\base\article.cls"
 Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
 ("C:\Program Files\MiKTeX 2.9\tex\latex\base\size10.clo"
@@ -21,6 +21,8 @@ File: size10.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
 \belowcaptionskip=\skip42
 \bibindent=\dimen102
 ) (Outline.aux)
+\openout1 = `Outline.aux'.
+
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 7.
 LaTeX Font Info:    ... okay on input line 7.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 7.
@@ -44,20 +46,20 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 
 {C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}] (Outline.aux) ) 
 Here is how much of TeX's memory you used:
- 231 strings out of 493698
- 2407 string characters out of 3144409
- 54149 words of memory out of 3000000
- 3632 multiletter control sequences out of 15000+200000
+ 231 strings out of 493333
+ 2407 string characters out of 3139171
+ 55242 words of memory out of 3000000
+ 3836 multiletter control sequences out of 15000+200000
  7895 words of font info for 28 fonts, out of 3000000 for 9000
- 1025 hyphenation exceptions out of 8191
- 23i,6n,17p,144b,187s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 1141 hyphenation exceptions out of 8191
+ 23i,6n,17p,133b,187s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Progra
 m Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Program Files/
 MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Files/MiKTeX 2
 .9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX 2.9/fonts/
 type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/pub
 lic/amsfonts/cm/cmr17.pfb>
-Output written on Outline.pdf (1 page, 58805 bytes).
+Output written on Outline.pdf (1 page, 58795 bytes).
 PDF statistics:
  26 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
