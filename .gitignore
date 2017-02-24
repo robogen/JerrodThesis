@@ -1,4 +1,10 @@
 DerekThesis/*
 Outline/*.pdf
+Outline/*.aux
+Outline/*.log
+Outline/*.synctex.gz
 Draft/*.pdf
+Draft/*.aux
+Draft/*.log
+Draft/*.synctex.gz
 notes.txt
