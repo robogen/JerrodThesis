@@ -27,7 +27,20 @@ CERN laboratories have used this model of computation to implement their own int
 \subsubsection{CMS Experiment}
 \subsection{Nature of WLCG jobs}
 \subsubsection{Condor}
+HTC processing system implemented across multiple machines, with the capability of having geographic remote sites working on processing together.
 \subsubsection{Important Properties}
+\begin{itemize}
+	\item CpuEff
+	\subitem A percentage property of work done in a job, being the amount of time spent working versus time spent per cpu on a node
+	\item EventRate
+	\subitem Shorthand for the ChirpCMSSWEventRate property, a snapshot of amount of work being done per flop.
+	\item Latency
+	\subitem Value garnered from perfSONAR services representing latency over the link. 
+	\item Packet Loss
+	\subitem Value from perfSONAR of packet loss on a link. The source value is the reported packet loss at the processing node while the destination value is the reported packet loss at the data node.
+	\item Throughput
+	\subitem Value from perfSONAR of throughput on a link. The source value is the reported throughput at the processing node while the destination value is the reported throughput at the data node.
+\end{itemize}
 \subsection{Importance of reported values}
 \subsection{Motivation}
 
