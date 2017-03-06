@@ -1,15 +1,27 @@
-\documentclass[]{acmart}
+\documentclass[sigconf]{acmart}
+
+\setcopyright{rightsretained}
 
 %opening
 \title{An investigation into High Throughput Computing performance of the Worldwide LHC Computing Grid with the CMS experiment}
 \author{Jerrod T. Dixon}
+\authornote{Graduate student at the Holland Computing Center}
+\orcid{1234-5678-9012}
+\affiliation{%
+	\institution{University of Nebraska - Lincoln}
+	\streetaddress{P.O. Box 1212}
+	\city{Lincoln} 
+	\state{Nebraska} 
+	\postcode{43017-6221}
+}
+\email{trovato@corporation.com}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-
+The Worldwide LHC Computing Grid (WLCG) has been used to great effect to process the data produced at the Large Hadron Collider (LHC). 
 \end{abstract}
 
 \section{Introduction}
@@ -17,9 +29,43 @@
 \section{Background}
 
 \section{Related Work}
-
+\subsection{HTCondor ClassAd data}
+The data is gathered first using a python script to spider across the WLCG to pull ClassAd information about the work done on their respective clusters. This data is then posted to an elasticsearch server to store for long term access. This gathers the statistics about the jobs themselves.
+\subsection{MWT2 perfSONAR}
+At the same time perfSONAR servers are setup at different regional locations to record different statistics about the network communications across links to other WLCG locations. This data includes throughput, packet loss, latency, and traceroute data (though for this investigation the traceroute data remains unused). This data is also posted to a MWT2 elasticsearch service at preset 'pulse' intervals.
+\subsection{Important Fields}
+In the HTCondor ClassAds there are a few fields in particular we are interested in.
+\begin{itemize}
+	\item CpuEff
+	\subitem Percentage value of CPU time spent processing data over $X$ amount of time.
+	\item JobCurrentStartDate
+	\subitem Date and time the job started processing, not when it was submitted.
+	\item JobFinishedHookDone
+	\subitem Date and time the job finished processing, not when it left the system.
+	\item WallClockHr
+	\subitem Integer value of time spent processing, invariant of number of cores.
+	\item RequestCpus
+	\subitem Number of cores used in processing work
+\end{itemize}
+There are however, CMS experiment specific values we are interested in.
+\begin{itemize}
+    \item KEvents
+    \subitem Number of events processed by the job in thousands.
+	\item InputGB
+	\subitem Size of input data for the job to process.
+	\item ChirpCMSSWEventRate
+	\subitem Clock rate of CPU as measured during the last 15 minutes of run time.
+	\item Workflow
+	\subitem Name of the workflow the job is working on.
+\end{itemize}
 \section{Experiment on CMS performance}
+The data processed is gathered and interpreted from July 16th, 2016 to July 23rd, 2016.
+\subsection{Relating Datasets}
+These two datasets are unrelated beyond location data (that is, whether it was recorded at the 'source' location or the 'destination' location). What the network performance data records as 'source' and 'destination' is considered in the htcondor ClassAd data as 'processing location' and 'data location', respectively. To relate these two datasets, values stored in the MWT2 elasticsearch server are considered to be relevant if the 'source' location is the 'processing location' and the 'destination' location is the 'data location' where the dataset for the workflow to be processed is stored. In addition, the store date must be within the range of the processing time for the job itself. 
 
+The relating data is stored on a staging elasticsearch server to hold the processed data. Each record in this third storage server relates to a ten minute period considering all work and network traffic during that period. Per a given 10 minute period values relating to the mean, median, min, max, and standard deviation ($\sigma$) of the distribution of each value considered is stored to maintain statistical qualities of the data the record represents.
+\subsection{Processing}
+Once this data is correlated it is
 \section{Results}
 
 \section{Conclusion and future work}
