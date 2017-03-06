@@ -8,3 +8,8 @@ Draft/*.aux
 Draft/*.log
 Draft/*.synctex.gz
 notes.txt
+PEARCpaper/*.aux
+PEARCpaper/*.log
+PEARCpaper/*.pdf
+PEARCpaper/*.synctex.gz
+PEARCpaper/*.out
