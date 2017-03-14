@@ -7,30 +7,50 @@
 
 \setcopyright{rightsretained}
 
+%Conference
+\acmConference[PEARC17]{Formerly XSEDE17}{July 2017}{New Orleans, Louisiana USA} 
+\acmYear{2017}
+\copyrightyear{2017}
+\acmPrice{15.00}
+
 %opening
 \title{An investigation into HTC performance of the Worldwide LHC Computing Grid}
 \author{Jerrod T. Dixon}
-\authornote{Graduate student at the Holland Computing Center}
+\authornote{Graduate student at the Holland Computing Center, primary author}
 \orcid{1234-5678-9012}
 \affiliation{%
 	\institution{University of Nebraska - Lincoln}
-	\streetaddress{P.O. Box 1212}
+	\streetaddress{1400 R St}
 	\city{Lincoln} 
 	\state{Nebraska} 
-	\postcode{43017-6221}
+	\postcode{68588}
 }
 \email{jtdixon@cse.unl.edu}
 
+\author{Brian Bockelman}
+\authornote{Advisor}
+\orcid{1234-5678-9012}
+\affiliation{%
+	\institution{University of Nebraska - Lincoln}
+	\streetaddress{1400 R St}
+	\city{Lincoln} 
+	\state{Nebraska} 
+	\postcode{68588}
+}
+\email{bbockelm@cse.unl.edu}
+
 \begin{document}
+
+\begin{abstract}
+The Worldwide LHC Computing Grid (WLCG) has been used to great effect to process the data produced at the Large Hadron Collider (LHC). The data is distributed internationally, and accessed from across geographic locations. This paper looks to investigate performance hits because of network issues.
+\end{abstract}
+
+\keywords{LHC, PEARC, \LaTeX, performance, WLCG, python, perfSONAR}
 
 \maketitle
 
-\begin{abstract}
-The Worldwide LHC Computing Grid (WLCG) has been used to great effect to process the data produced at the Large Hadron Collider (LHC). 
-\end{abstract}
-
 \section{Introduction}
-Implemented internationally, the Worldwide LHC Computing Grid (WLCG) operates as a conglomeration of computing centers managed by universities. The goal is to cooperate in processing the large amounts of data (~50 Petabytes in 2016 alone) produced by the Large Hadron Collider (LHC) at CERN.
+Implemented internationally, the Worldwide LHC Computing Grid (WLCG)\cite{wlcg} operates as a conglomeration of computing centers managed by universities. The goal is to cooperate in processing the large amounts of data (~50 Petabytes in 2016 alone) produced by the Large Hadron Collider (LHC) at CERN.
 
 Over the years, the processing methods have improved, and the implementation of the WLCG itself has grown in such a way that more data is produced than can be processed in a reasonable amount of time. This has resulted in backlogs of data requiring processing. Coordination of work is at issue as well, deciding when and where the transfer of the data to offsite locations should occur and where it is to go. 
 
@@ -87,16 +107,24 @@ In the HTCondor ClassAds there are a few fields in particular we are interested 
 \section{Related Work}
 The ability of this work to make investigations into the performance of jobs against network related data is directly related to the work of \cite{shawn}. As stated, the collaborations for the LHC rely heavily upon network technologies for the infrastructure but it is incredibly difficult to locate issues. It is from this inspiration that this work draws to investigate the work done utilizing the WLCG grid network while accounting for the affect network communications have on the processing and transference of data.
 
-In addition, the primary gathering of HTCondor ClassAds is performed via a script designed and executed by \cite{brian}. Without this work there would be no easy method to investigate the HTCondor ClassAds distributed around the world, and read their values. In addition
+In addition, the primary gathering of HTCondor ClassAds is performed via a script designed and executed by \cite{brian}. Without this work there would be no easy method to investigate the HTCondor ClassAds distributed around the world, and read their values.
+
+Of particular concern is the CRAB3 scheduling system, a layer of abstraction thrown on the WLCG implementation to give ease of access and submission methodology to allow distribution of work across the network. As described in \cite{crab}, the CRAB3 method also is important to the method of data distribution. It works by allowing users to provide ad-hoc methods of processing, and distributing work to sites that have agreed to processing, depending on their tier level.
 \section{Experiment on CMS performance}
 The data processed is gathered and interpreted from July 16th, 2016 to July 23rd, 2016.
 \subsection{Relating Datasets}
 These two datasets are unrelated beyond location data (that is, whether it was recorded at the 'source' location or the 'destination' location). What the network performance data records as 'source' and 'destination' is considered in the htcondor ClassAd data as 'processing location' and 'data location', respectively. To relate these two datasets, values stored in the MWT2 elasticsearch server are considered to be relevant if the 'source' location is the 'processing location' and the 'destination' location is the 'data location' where the dataset for the workflow to be processed is stored. In addition, the store date must be within the range of the processing time for the job itself. 
 
 The relating data is stored on a staging elasticsearch server to hold the processed data. Each record in this third storage server relates to a ten minute period considering all work and network traffic during that period. Per a given 10 minute period values relating to the mean, median, min, max, and standard deviation ($\sigma$) of the distribution of each value considered is stored to maintain statistical qualities of the data the record represents.
+\subsection{Execution site vs Data site}
+While correlating the data, we tie the \texttt{src} property of the perfSONAR record value to the job execution site, indicating the location of recording the network state is the same as where the work is performed.
+
+Alternatively, we tie the \texttt{dest} property of the perfSONAR record value to the data location, indicating the recording of the network state from where the data exists.
 \subsection{Processing}
 Once this data is correlated it is stored, as previously stated, on a simplicial staging elasticsearch server. Graphs of these values are produced via python script, separating the graphs so that each is specific for a particular site, over individual links, on specific days, and per workflow. A line of best fit is calculated per value relationship. For interpreting this line of fit, the $r$ value is generally ignored as it is uncertain what a best fit $r$ value would be. The relationship we are primarily concerned with is if the slope of the line is positive or negative, to indicate an increasing or decreasing value. As such the p-value is used to determine of the line is valid results. Keeping with common practices, only lines with a value below 0.05 are observed.
+
 \section{Results}
+In the processing of data to calculate the relationships between HTCondor work data and perfSONAR networking data such as what is seen in Figure \ref{fig:displacedjet}, \ref{fig:btagmu}, and \ref{fig:btagcsv}, a line of linear regression is calculated for the relationship to best guess the quality of comparison. It is uncertain whether the r-value fitting the regression to the data is a valid comparison, so the calculated p-value is used to assume quality. The line of regression is not used to predict future values, only ensure the data is closely related. Since we are only curious about the relationship, whether both sets follow similar trends, we only need to know if the slope of the line follows a positive or a negative trend. As such, the p-value is assumed sufficient in qualifying the fit. Only relationships with a p-value that is less than 0.05 are accepted a valid set.
 \begin{figure*}[!htb]
 	\minipage{0.32\textwidth}
 		\includegraphics[width=\linewidth]{displacedjet_kit_pic}
@@ -114,6 +142,64 @@ Once this data is correlated it is stored, as previously stated, on a simplicial
 		\label{fig:btagmu}
 	\endminipage\hfill
 \end{figure*}
+
+\begin{table}
+	\caption{Percent of time a regional location is accessed as a data location}
+	\label{tab:datalocations}
+	\begin{tikzpicture}
+	\begin{axis}[
+	symbolic x coords={t1\_uk\_ral, t1\_de\_kit, t1\_it\_cnaf, t1\_es\_pic, t1\_fr\_ccin2p3, t1\_us\_fnal},
+	xtick=data,
+	x tick label style={
+		grid=major,
+		tick label style={rotate=45}
+	},
+	point meta={y*100},
+	nodes near coords={\pgfmathprintnumber\pgfplotspointmeta\%},
+	yticklabel style={/pgf/number format/fixed}
+	]
+	\addplot[ybar,fill=blue] coordinates {
+		(t1\_uk\_ral, .00735)
+		(t1\_de\_kit, .11029)
+		(t1\_it\_cnaf, .11764)
+		(t1\_es\_pic, .21323)
+		(t1\_fr\_ccin2p3, .04412)
+		(t1\_us\_fnal, .50735)
+	};
+	\end{axis}
+	\end{tikzpicture}
+\end{table}
+\subsection{Affect on performance}
+As a metric of performance on a system, we will primarily be observing the \texttt{CpuEff} property, as defined in Table \ref{tab:htcondor}. We're interested primarily in the relation of how often \texttt{CpuEff} has a negative slope value when compared to network performance. Across all the sites noted as execution locations, it is first important to determine where the data is being pulled from, when the data exists offsite from the current location. As shown in Table \ref{tab:datalocations}, only 6 locations are used when accessing offsite data. Of the most concern, is the \texttt{t1\_us\_fnal} data location, which is accessed 50.7\% of the time to pull data from.
+\begin{table}
+	\caption{Percent of time a regional location is attributed to negative slope}
+	\label{tab:badop}
+	\begin{tikzpicture}
+	\begin{axis}[
+	symbolic x coords={t1\_uk\_ral, t1\_de\_kit, t1\_it\_cnaf, t1\_es\_pic, t1\_fr\_ccin2p3, t1\_us\_fnal},
+	xtick=data,
+	x tick label style={
+		grid=major,
+		tick label style={rotate=45}
+	},
+	point meta={y*100},
+	nodes near coords={\pgfmathprintnumber\pgfplotspointmeta\%},
+	yticklabel style={/pgf/number format/fixed}
+	]
+	\addplot[ybar,fill=blue] coordinates {
+		(t1\_uk\_ral, .0)
+		(t1\_de\_kit, .07777)
+		(t1\_it\_cnaf, .12221)
+		(t1\_es\_pic, .18887)
+		(t1\_fr\_ccin2p3, .02222)
+		(t1\_us\_fnal, .0)
+	};
+	\end{axis}
+	\end{tikzpicture}
+\end{table}
+
+Taking into account how often a calculated linear regression line results with a negative slope when accounting \texttt{CpuEff} versus the calculated network values, maintaining a calculated p-value of less than 0.05, we can observe in Table \ref{tab:badop} that during the calculated period that \texttt{t1\_es\_pic} exhibits the highest amount of work where efficiency is lost due to network performance. 
+\subsection{Inverse relationship occurance between \texttt{CpuEff} and \texttt{EventRate}}
 \begin{table}
 	\caption{Percent of time Workflows have inverse slopes with prefix fabozzi\_Run2016B}
 	\label{tab:workflows}
@@ -125,6 +211,8 @@ Once this data is correlated it is stored, as previously stated, on a simplicial
 		grid=major,
 		tick label style={rotate=45}
 	},
+	point meta={y*100},
+	nodes near coords={\pgfmathprintnumber\pgfplotspointmeta\%},
 	yticklabel style={/pgf/number format/fixed}
 	]
 	\addplot[ybar,fill=blue] coordinates {
@@ -138,13 +226,16 @@ Once this data is correlated it is stored, as previously stated, on a simplicial
 	\end{axis}
 	\end{tikzpicture}
 \end{table}
-In the processing of data to calculate the relationships between HTCondor work data and perfSONAR networking data such as what is seen in Figure \ref{fig:displacedjet}, \ref{fig:btagmu}, and \ref{fig:btagcsv}, a line of linear regression is calculated for the relationship to best guess the quality of comparison. It is uncertain whether the r-value fitting the regression to the data is a valid comparison, so the calculated p-value is used to assume quality. The line of regression is not used to predict future values, only ensure the data is closely related. Since we are only curious about the relationship, whether both sets follow similar trends, we only need to know if the slope of the line follows a positive or a negative trend. As such, the p-value is assumed sufficient in qualifying the fit. Only relationships with a p-value that is less than 0.05 are accepted a valid set.
 
 For the data collected, when comparing \texttt{EventRate} and \texttt{CpuEff} to networking information, 48.9\% of the time the two values have an inverse relationship. That is, while one improves the other declines. As seen in Table \ref{tab:workflows}, the distribution of which workflows show this relationship are displayed. 
 
 It is uncertain what exactly is causing this relationship. Given the nature of work for the CMS experiment, a potential implication is the luminosity of the given data. For Scattering Theory, the concept of luminosity\cite{lumi} is the relationship between the number of events generated in the experiment over time. The field \texttt{KEvents} contains the number of events processed total, but there is no job data holding over how much time that number of events existed.
 \section{Conclusion and future work}
+From the observed period we can see that, as shown in Table \ref{tab:datalocations}, the regional locations used to store data are very limited in number, and are very specific sites. Despite \texttt{t1\_us\_fnal} being the majority storage location of processable data, \texttt{t1\_es\_pic} seems to be the regional location where performance drops when accessing data stored there. The processed values are limited though, as work where multiple data locations are used cannot be calculated. Currently there is no mechanism or property which indicates how much data is pulled from where when data exists in multiple locations.
 
+However, as shown in Table \ref{tab:workflows}, the data processed from this given period has an inverse relationship between performance of the work, defined by \texttt{CpuEff}, and the rate of CPU usage, defined by \texttt{EventRate}. Further processing is required to resolve exactly why this is, potentially relating to the luminosity\cite{lumi} of the data being processed. In order to fully determine if this is the source, a method of reverse-calculating the luminosity record of the processing job will be required.
+
+Currently, the value of fit of the data is done via a linear regression. For future work better statistical modeling utilizing Big Data processing methods, such as a priori modeling, would be a valuable method of investigation into the job performance dataset. In addition, utilization of streaming methodology would be an interesting method of processing data live rather than through batch work.
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{pearc} 

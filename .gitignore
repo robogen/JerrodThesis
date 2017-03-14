@@ -13,3 +13,5 @@ PEARCpaper/*.log
 PEARCpaper/*.pdf
 PEARCpaper/*.synctex.gz
 PEARCpaper/*.out
+PEARCpaper/*.bbl
+PEARCpaper/*.blg
