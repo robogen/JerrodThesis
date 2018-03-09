@@ -102,26 +102,26 @@ The Worldwide LHC Computing Grid (WLCG) has been used to great effect to process
 \mainmatter
 \chapter{Introduction}
 \label{sec:Introduction}
-Implemented internationally, the Worldwide LHC Computing Grid (WLCG)\cite{wlcg} operates as a conglomeration of computing centers managed by universities. The goal is to cooperate in processing the large amounts of data (~50 Petabytes in 2016 alone) produced by the Large Hadron Collider (LHC) at CERN.
+The Worldwide LHC Computing Grid (WLCG)\cite{wlcg} manages the procesing of computing centers around the world. They cooperate in processing the large amounts of data (~50 Petabytes in 2016 alone) produced by the Large Hadron Collider (LHC) at CERN.
 
 Over the years, the processing methods have improved, and the implementation of the WLCG itself has grown in such a way that more data is produced than can be processed in a reasonable amount of time. This has resulted in backlogs of data requiring processing. Coordination of work is at issue as well, deciding when and where the transfer of the data to offsite locations should occur and where it is to go. 
 
-Depending on which labs require the dataset, the data can be replicated in multiple geographically distant locations in such a way to allow easier access. Also, load balancing of work causes issues with users submitting work to be done to the same processing center. This can cause certain locations to become overloaded with requests for processing while others go almost unused. By extension the data also runs into the issue of being requested to do the calculations against getting called to a processing center that is not geographically close, for example the job is processed in Italy but the data exists in Spain, slowing the acquisition time. 
+Depending on which resources require the dataset, the data can be replicated in multiple geographically distant locations in such a way to allow easier access. Also, load balancing of work causes issues with users submitting work to be done to the same processing center. This can cause certain locations to become overloaded with requests for processing while others go almost unused. By extension the data also runs into the issue of being requested to do the calculations against getting called to a processing center that is not geographically close, for example the job is processed in Italy but the data exists in Spain, slowing the acquisition time. 
 
 It has been an interesting subject but an investigation into how this work is done and split across sites has yet, to the authors knowledge, been done yet. For the purposes of this paper the data processed by the WLCG is investigated, with special attention paid to work done where the data for the job itself exists offsite from where the work is being done. Due to limitations of knowing how much data was pulled from where, only jobs with one data location are used.
 
 
 \chapter{Background}
-A grid network is classically defined as a software solution, implementing general commodity hardware, to enable the creation of a series of machines to achieve High Performance Computing (HTC). The benefit here, is that by implementing such a solution, allows for cheaper access to HTC style computing without requiring investment into designing and implementing specialized hardware to improve scientific computations.
+A grid network is classically defined as a software solution, implementing general commodity hardware, to enable the creation of a series of machines to achieve High Performance Computing (HTC). The benefit here is that by implementing such a solution, allows for cheaper access to HTC style computing without requiring investment into designing and implementing specialized hardware to improve scientific computations.
 
-In HTC solutions, following the previous definition, there are times when the cluster is not fully in use by the institution that developed it. Because of this, institutions across the globe have come up with methods to connect their personal clusters to a international grid. In this way, these HTC solutions are better utilized to achieve a higher usage saturation point, taking work from excessively busy systems and giving work to idle ones.
+In High Throughput Computing solutions, there are times when the cluster is not fully in use by the institution that purchased it. Because of this, institutions across the globe have come up with methods to connect their personal clusters to a international grid. In this way, these HTC solutions are better utilized to achieve a higher usage saturation point, taking work from excessively busy systems and giving work to idle ones.
 \section{HTCondor ClassAd data} \label{sec:classad}
-The data is gathered first using a python script to spider across the WLCG to pull ClassAd information about the work done on their respective clusters from the HTCondor\cite{condor} database. This data is then posted to an elasticsearch server to store for long term access. This gathers the statistics about the jobs themselves, just as duration of job, event rate, and efficiency of processing defined by the field \texttt{CpuEff} in Table \ref{tab:htcondor}.
-\section{MWT2 perfSONAR}
-At the same time perfSONAR servers are setup at different regional locations to record different statistics about the network communications across links to other WLCG locations. This data includes throughput, packet loss, latency, and traceroute data (though for this investigation the traceroute data remains unused). This data is also posted to a MWT2 elasticsearch service at preset 'pulse' intervals.
+The data is gathered first using a python script to spider across the WLCG to pull ClassAd information about the work done on their respective clusters from the HTCondor\cite{condor} database. This data is then stored on an elasticsearch server to store for long term access. This gathers the statistics about the jobs themselves, such as duration of job, event rate, and efficiency of processing defined by the field \texttt{CpuEff} in Table \ref{tab:htcondor}.
+\section{perfSONAR}
+PerfSONAR\cite{perfsonar} servers are setup at different regional locations to record different statistics about the network communications across links to other WLCG locations. This data includes throughput, packet loss, latency, and traceroute data (though for this investigation the traceroute data remains unused). This data is also stored to a MWT2 elasticsearch service at preset 'pulse' intervals.
 
 \section{Important Values}
-In the HTCondor ClassAds there are a few fields in particular we are interested in, as can be seen in Table \ref{tab:htcondor}. There are however, CMS experiment specific values we are interested in as well, defined in Table \ref{tab:cmscondor}. Both of these sets of values are stored and reported by the HTCondor databases, recorded as ClassAds. On their own they can be interesting, but we are primarily concerned with their relation to networking information. Correlation will be the primary issue, as the perfSONAR data and HTCondor values are separate.
+In the HTCondor ClassAds there are a few fields in particular we are interested in, as can be seen in Table \ref{tab:htcondor}. There are however, CMS experiment specific values we are interested in as well, defined in Table \ref{tab:cmscondor}. Both of these sets of values are stored and reported by the HTCondor databases, recorded as ClassAds. On their own they can be interesting, but we are primarily concerned with their relation to networking information. Correlation with the perfSONAR data and HTCondor values are done in this experiment.
 \begin{table}
 	\caption{Typical HTCondor properties}
 	\label{tab:htcondor}
@@ -129,15 +129,15 @@ In the HTCondor ClassAds there are a few fields in particular we are interested 
 		\toprule
 		Field &Description \\
 		\midrule
-		\texttt{CpuEff} & \parbox{4.5cm}{Percentage value of CPU time spent processing data over $X$ amount of time.} \\
+		\texttt{CpuEff} & \parbox{9.5cm}{Percentage value of CPU time spent processing data over $X$ amount of time.} \\
 		\midrule
-		\texttt{JobCurrentStartDate}& \parbox{4.5cm}{Date and time the job started processing, not when it was submitted.} \\
+		\texttt{JobCurrentStartDate}& \parbox{9.5cm}{Date and time the job started processing, not when it was submitted.} \\
 		\midrule
-		\texttt{JobFinishedHookDone}& \parbox{4.5cm}{Date and time the job finished processing, not when it left the system.} \\
+		\texttt{JobFinishedHookDone}& \parbox{9.5cm}{Date and time the job finished processing, not when it left the system.} \\
 		\midrule
-		\texttt{WallClockHr}& \parbox{4.5cm}{Integer value of time spent processing, invariant of number of cores.} \\
+		\texttt{WallClockHr}& \parbox{9.5cm}{Integer value of time spent processing, invariant of number of cores.} \\
 		\midrule
-		\texttt{RequestCpus}& \parbox{4.5cm}{Number of cores used in processing work.} \\
+		\texttt{RequestCpus}& \parbox{9.5cm}{Number of cores used in processing work.} \\
 		\bottomrule
 	\end{tabular}
 \end{table}
@@ -149,13 +149,13 @@ In the HTCondor ClassAds there are a few fields in particular we are interested 
 		\toprule
 		Field &Description \\
 		\midrule
-		\texttt{KEvents} & \parbox{4.5cm}{Number of events processed by the job in thousands.} \\
+		\texttt{KEvents} & \parbox{9.5cm}{Number of events processed by the job in thousands.} \\
 		\midrule
-		\texttt{InputGB}& \parbox{4.5cm}{Size of input data for the job to process.} \\
+		\texttt{InputGB}& \parbox{9.5cm}{Size of input data for the job to process.} \\
 		\midrule
-		\texttt{ChirpCMSSWEventRate}& \parbox{4.5cm}{Clock rate of CPU as measured during the last 15 minutes of run time.} \\
+		\texttt{ChirpCMSSWEventRate}& \parbox{9.5cm}{Clock rate of CPU as measured during the last 15 minutes of run time.} \\
 		\midrule
-		\texttt{Workflow}& \parbox{4.5cm}{Name of the workflow the job is working on in human readable format.} \\
+		\texttt{Workflow}& \parbox{9.5cm}{Name of the workflow the job is working on in human readable format.} \\
 		\bottomrule
 	\end{tabular}
 \end{table}
@@ -178,11 +178,11 @@ While correlating the data, we tie the \texttt{src} property of the perfSONAR re
 
 Alternatively, we tie the \texttt{dest} property of the perfSONAR record value to the data location, indicating the recording of the network state from where the data exists.
 \section{Processing}
-Once this data is correlated it is stored, as previously stated, on a simplicial staging elasticsearch server. Graphs of these values are produced via python script, separating the graphs so that each is specific for a particular site, over individual links, on specific days, and per workflow. A line of best fit is calculated per value relationship. For interpreting this line of fit, the $r$ value is generally ignored as it is uncertain what a best fit $r$ value would be. The relationship we are primarily concerned with is if the slope of the line is positive or negative, to indicate an increasing or decreasing value. As such the p-value is used to determine of the line is valid results. Keeping with common practices, only lines with a value below 0.05 are observed.
+Once this data is correlated it is stored, as previously stated, on a staging elasticsearch server. Graphs of these values are produced via python script, separating the graphs so that each is specific for a particular site, over individual links, on specific days, and per workflow. A line of best fit is calculated per value relationship. For interpreting this line of fit, the $r$ value is generally ignored as it is uncertain what a best fit $r$ value would be. The relationship we are primarily concerned with is if the slope of the line is positive or negative, to indicate an increasing or decreasing value. As such the p-value is used to determine of the line is valid results. Keeping with common practices, only lines with a value below 0.05 are observed.
 
 \chapter{Results}
 \label{sec:Evaluation}
-In the processing of data to calculate the relationships between HTCondor work data and perfSONAR networking data such as what is seen in Figure \ref{fig:displacedjet}, \ref{fig:btagmu}, and \ref{fig:btagcsv}, a line of linear regression is calculated for the relationship to best guess the quality of comparison. It is uncertain whether the r-value fitting the regression to the data is a valid comparison, so the calculated p-value is used to assume quality. The line of regression is not used to predict future values, only ensure the data is closely related. Since we are only curious about the relationship, whether both sets follow similar trends, we only need to know if the slope of the line follows a positive or a negative trend. As such, the p-value is assumed sufficient in qualifying the fit. Only relationships with a p-value that is less than 0.05 are accepted a valid set.
+In the processing of data to calculate the relationships between HTCondor work data and perfSONAR networking data such as what is seen in Figure \ref{fig:displacedjet}, \ref{fig:btagcsv}, and \ref{fig:btagmu}, a line of linear regression is calculated for the relationship to best guess the quality of comparison. It is uncertain whether the r-value fitting the regression to the data is a valid comparison, so the calculated p-value is used to assume quality. The line of regression is not used to predict future values, only ensure the data is closely related. Since we are only curious about the relationship, whether both sets follow similar trends, we only need to know if the slope of the line follows a positive or a negative trend. As such, the p-value is assumed sufficient in qualifying the fit. Only relationships with a p-value that is less than 0.05 are accepted a valid set.
 \begin{figure*}[!htb]
 	\minipage{0.32\textwidth}
 	\includegraphics[width=\linewidth]{displacedjet_kit_pic}
@@ -295,7 +295,7 @@ From the observed period we can see that, as shown in Table \ref{tab:datalocatio
 
 However, as shown in Table \ref{tab:workflows}, the data processed from this given period has an inverse relationship between performance of the work, defined by \texttt{CpuEff}, and the rate of CPU usage, defined by \texttt{EventRate}. Further processing is required to resolve exactly why this is, potentially relating to the luminosity\cite{lumi} of the data being processed. In order to fully determine if this is the source, a method of reverse-calculating the luminosity record of the processing job will be required.
 
-Currently, the value of fit of the data is done via a linear regression. For future work better statistical modeling utilizing Big Data processing methods, such as a priori modeling, would be a valuable method of investigation into the job performance dataset. In addition, utilization of streaming methodology would be an interesting method of processing data live rather than through batch work.
+Currently, the value of fit of the data is done via a linear regression. For future work better statistical modeling utilizing Data Mining processing methods, such as a priori modeling, would be a valuable method of investigation into the job performance dataset. In addition, utilization of streaming methodology would be an interesting method of processing data live rather than through batch work.
 
 
 
